@@ -1,7 +1,7 @@
 # set a region
 variable "region" {
     type = string
-    default = "ap-south-1"
+    default = "us-east-1"
   
 }
 # network cidr range
@@ -13,14 +13,14 @@ variable "network_cidrs" {
 # availability zone 1a
 variable "subnet_azs_1a" {
     type = string
-    default = "ap-south-1a"
+    default = "us-east-1a"
   
 }
 
 # availability zone 1b
 variable "subnet_azs_1b" {
     type = string
-    default = "ap-south-1b"
+    default = "us-east-1b"
   
 }
 

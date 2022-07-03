@@ -1,6 +1,6 @@
 # added the ec2 instance details 
 resource "aws_instance" "webserver" {
-    ami = "ami-0675118d2eaeabbc7"
+    ami = "ami-08d4ac5b634553e16"
     instance_type = "t2.micro"
     key_name = "mylaptop"
     subnet_id = aws_subnet.public_subnet.id
@@ -30,7 +30,7 @@ resource "aws_instance" "webserver" {
 }
 
 resource "aws_instance" "dbserver" {
-    ami = "ami-0675118d2eaeabbc7"
+    ami = "ami-08d4ac5b634553e16"
     instance_type = "t2.micro"
     key_name = "mylaptop"
     subnet_id = aws_subnet.private_subnet.id
