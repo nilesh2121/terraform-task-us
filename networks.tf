@@ -129,6 +129,16 @@ resource "aws_route_table" "publicrt" {
     gateway_id = aws_internet_gateway.hcl-igw.id
 
   }
+
+  route {
+    cidr_block = "172.31.0.0/16"
+    vpc_peering_connection_id = aws_vpc_peering_connection.usa-1.id
+
+
+  }
+
+
+
   tags = {
     Name = "Public RT"
   }
@@ -144,6 +154,13 @@ resource "aws_route_table" "privatert" {
 
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat-gateway-public.id
+
+  }
+
+    route {
+    cidr_block = "172.31.0.0/16"
+    vpc_peering_connection_id = aws_vpc_peering_connection.usa-1.id
+
 
   }
 
@@ -186,5 +203,50 @@ resource "aws_nat_gateway" "nat-gateway-public" {
   tags = {
     Name = "Nat gateway public subnet"
   }
+  
+}
+
+# vpc peering 
+
+provider "aws" {
+  alias = "usa-1"
+  region = "us-east-1"
+}
+
+resource "aws_vpc" "usa-1" {
+  cidr_block = "172.31.0.0/16"
+  provider = aws.usa-1
+}
+
+data "aws_caller_identity" "usa-1" {
+  provider = aws.usa-1
+  
+}
+
+# Requester's side of the connection.
+
+resource "aws_vpc_peering_connection" "usa-1" {
+  vpc_id      = aws_vpc.hcl.id
+  peer_vpc_id = "vpc-032255c1bc89ca463"
+  peer_region = "us-east-1"
+  auto_accept = false
+  peer_owner_id = data.aws_caller_identity.usa-1.account_id
+
+  tags = {
+    side = "Requester"
+  }
+}
+
+# Accepter's side of the connection.
+
+resource "aws_vpc_peering_connection_accepter" "usa-1" {
+  provider = aws.usa-1
+  vpc_peering_connection_id = aws_vpc_peering_connection.usa-1.id
+  auto_accept = true
+
+  tags = {
+    side = "Accepter"
+  }
+  
   
 }
